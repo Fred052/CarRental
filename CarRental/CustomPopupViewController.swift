@@ -11,12 +11,9 @@ final class CustomPopupViewController: UIViewController {
     
     private let popupTitle: String
     private let message: String
+    private let buttonTitle: String
     
-    private let confirmButtonTitle: String
-    private let cancelButtonTitle: String?
-    
-    private let onConfirm: (() -> Void)?
-    private let onCancel: (() -> Void)?
+    private let onTappedButton: (() -> Void)?
     
      
     private let containerView: UIView = {
@@ -46,7 +43,7 @@ final class CustomPopupViewController: UIViewController {
         return label
     }()
     
-    private let confirmButton: UIButton = {
+    private let actionButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemBlue
@@ -56,28 +53,16 @@ final class CustomPopupViewController: UIViewController {
         return button
     }()
     
-    private let cancelButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitleColor(.systemRed, for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 16)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
     init(
         title: String,
         message: String,
-        confirmButtonTitle: String = "Tamam",
-        cancelButtonTitle: String? = nil,
-        onConfirm: (() -> Void)? = nil,
-        onCancel: (() -> Void)? = nil
+        buttonTitle: String = "Tamam",
+        onTappedButton: (() -> Void)? = nil
     ) {
         self.popupTitle = title
         self.message = message
-        self.confirmButtonTitle = confirmButtonTitle
-        self.cancelButtonTitle = cancelButtonTitle
-        self.onConfirm = onConfirm
-        self.onCancel = onCancel
+        self.buttonTitle = buttonTitle
+        self.onTappedButton = onTappedButton
         
         super.init(nibName: nil, bundle: nil)
         
@@ -94,7 +79,13 @@ final class CustomPopupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupView()
         setupUI()
+        setupActions()
+    }
+    
+    private func setupView() {
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     }
     
     private func setupUI() {
@@ -102,56 +93,43 @@ final class CustomPopupViewController: UIViewController {
         
         containerView.addSubview(titleLabel)
         containerView.addSubview(messageLabel)
-        containerView.addSubview(confirmButton)
-        containerView.addSubview(cancelButton)
-        
+        containerView.addSubview(actionButton)
         
         titleLabel.text = popupTitle
         messageLabel.text = message
-        
-        
+
+        actionButton.setTitle(buttonTitle, for: .normal)
         
         
         NSLayoutConstraint.activate([
             containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            containerView.trailingAnchor.constraint(equalTo: view.leadingAnchor, constant: -30),
-            
+            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             
             titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 25),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
             
-            
             messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
             messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
             
-            
-            confirmButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
-            confirmButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            confirmButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
-            containerView.heightAnchor.constraint(equalToConstant: 50)
+            actionButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
+            actionButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+            actionButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+            actionButton.heightAnchor.constraint(equalToConstant: 50),
+            actionButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -20)
         ])
     }
     
     private func setupActions() {
-        confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for:  .touchUpInside)
-        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        actionButton.addTarget(self, action: #selector(actionButtonTapped), for:  .touchUpInside)
     }
     
-    
-    
-    @objc private func confirmButtonTapped() {
+    @objc private func actionButtonTapped() {
         dismiss(animated: true) { [weak self] in
-            self?.onConfirm?()
-        }
-    }
-    
-    @objc private func cancelButtonTapped() {
-        dismiss(animated: true) { [weak self] in
-            self?.onCancel?()
+            self?.onTappedButton?()
         }
     }
     

@@ -62,10 +62,9 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         loginSetupView()
+        setupActions()
         
-        view.insertSubview(backImageView, at: 0)
         
     }
     
@@ -124,9 +123,38 @@ class LoginViewController: UIViewController {
         
     }
     
+    private func setupActions() {
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+    }
     
-    
-    
-    
-    
+    @objc private func loginButtonTapped() {
+        let email = emailTextField.text ?? ""
+        let password = passwordTextField.text ?? ""
+        
+        guard !email.isEmpty, !password.isEmpty else {
+            return
+        }
+        
+        if let user = FileManagerService.shared.findUser(email: email, password: password) {
+            print("Login Successful")
+            print("Welcome \(user.name)")
+            
+            UserDefaults.standard.set(true, forKey: "isLoggedIn")
+            
+            let homeViewController = HomeViewController()
+            navigationController?.setViewControllers(
+                [homeViewController],
+                animated: true
+            )
+        } else {
+            let popup = CustomPopupViewController(
+                title: "Login Failed",
+                message: "Email or password is incorrect.",
+                buttonTitle: "OK"
+            )
+            
+            present(popup, animated: true)
+        }
+        
+    }
 }

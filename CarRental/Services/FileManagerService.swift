@@ -14,13 +14,11 @@ final class FileManagerService {
     
     private init() {}
     
-    private let fileManager = FileManager.default
-    
-    private var fileURL: URL {
-        let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        
-        return documentsDirectory.appendingPathComponent("users.json")
-        
+    private func fileURL() -> URL {
+        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let url =  urls[0].appendingPathComponent("User.json")
+        print(url)
+        return url
     }
     
     //Save User
@@ -32,7 +30,7 @@ final class FileManagerService {
         
         do {
             let data = try JSONEncoder().encode(users)
-            try data.write(to: fileURL)
+            try data.write(to: fileURL())
             print("User succesfully saved")
         }catch {
             print(error.localizedDescription)
@@ -44,12 +42,8 @@ final class FileManagerService {
     //Load User
     func loadUsers() -> [User] {
         
-        guard fileManager.fileExists(atPath: fileURL.path) else {
-            return []
-        }
-        
         do {
-            let data = try Data(contentsOf: fileURL)
+            let data = try Data(contentsOf: fileURL())
             let users = try JSONDecoder().decode([User].self, from: data)
             return users
         }catch {

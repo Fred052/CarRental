@@ -59,9 +59,10 @@ class RegistrationViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        title = "Qeydiyyat"
+        title = "Registration"
         
         setupUI()
+        setupAction()
     }
     
     
@@ -102,5 +103,30 @@ class RegistrationViewController: UIViewController {
             registerButton.heightAnchor.constraint(equalToConstant: 50),
             
         ])
+    }
+    
+    private func setupAction() {
+        registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func  registerButtonTapped() {
+        let name = nameTextField.text ?? ""
+        let email = emailTextField.text ?? ""
+        let password = passwordTextField.text ?? ""
+        
+        let user = User(name: name, email: email, password: password)
+        
+        FileManagerService.shared.saveUser(user)
+        
+        let popup = CustomPopupViewController(
+            title: "Registration Successfull",
+            message: "Your account has been successfully created.",
+            buttonTitle: "Ok"
+        ){[weak self] in
+            
+            self?.navigationController?.popViewController(animated: true)
+        }
+        
+        present(popup, animated: true)
     }
 }
