@@ -1,0 +1,43 @@
+[
+  {
+    "id": 1,
+    "brand": "Toyota",
+    "model": "Yaris iA",
+    "category": "Standard",
+    "price": 350,
+    "period": "month",
+    "engine": "4-Cyl 1.5 Liter",
+    "image": "toyota_yaris"
+  },
+  {
+      "id": 2,
+      "brand": "Mercedes",
+      "model": "C200",
+      "category": "Prestige",
+      "price": 550,
+      "period": "month",
+      "engine": "4-Cyl 2.2 Liter",
+      "image": "mercedes_C200"
+    },
+  {
+      "id": 3,
+      "brand": "Kia",
+      "model": "K5",
+      "category": "Standard",
+      "price": 420,
+      "period": "month",
+      "engine": "4-Cyl 1.2 Liter",
+      "image": "kia_k5"
+    },
+  {
+      "id": 4,
+      "brand": "Jeep",
+      "model": "Doodge",
+      "category": "SUV",
+      "price": 750,
+      "period": "month",
+      "engine": "4-Cyl 4.4 Liter",
+      "image": "jeep_doodge"
+    }
+
+]
