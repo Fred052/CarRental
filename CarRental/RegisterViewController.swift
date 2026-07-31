@@ -33,6 +33,10 @@ class RegistrationViewController: UIViewController {
         textField.placeholder = "Email"
         textField.borderStyle = .roundedRect
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.keyboardType = .emailAddress
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
+        textField.textContentType = .emailAddress
         return textField
     }()
     
@@ -110,23 +114,94 @@ class RegistrationViewController: UIViewController {
     }
     
     @objc private func  registerButtonTapped() {
-        let name = nameTextField.text ?? ""
-        let email = emailTextField.text ?? ""
+        let name = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let password = passwordTextField.text ?? ""
+        
+        guard !name.isEmpty else {
+            showpopup(
+                title: "Invalid Name",
+                message: "Please enter your name."
+            )
+            return
+        }
+        
+        guard !email.isEmpty else {
+            showpopup(
+                title: "Invalid Email",
+                message: "Please enter your email address."
+            )
+            return
+        }
+        
+        guard ValidationService.shared.isValidEmail(email) else {
+            showpopup(
+                title: "Invalid Email",
+                message: "Please enter a valid email address."
+            )
+            return
+        }
+        
+        
+        guard !password.isEmpty else {
+            showpopup(
+                title: "Invalid Password",
+                message: "Please enter a password."
+            )
+            return
+        }
+        
+        guard ValidationService.shared.isvalidPassword(password) else {
+            showpopup(
+                title: "Invalid Password",
+                message: "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character."
+            )
+            return
+        }
+        
+        guard !FileManagerService.shared.userExists(email: email) else {
+            
+            showpopup(
+                title: "Account Already Exists",
+                message: "An account with this email address already exists."
+            )
+            return
+        }
+    
+        
+        
+        
         
         let user = User(name: name, email: email, password: password)
         
         FileManagerService.shared.saveUser(user)
         
-        let popup = CustomPopupViewController(
+        showpopup(
             title: "Registration Successfull",
-            message: "Your account has been successfully created.",
-            buttonTitle: "Ok"
+            message: "Your account has been successfully created."
         ){[weak self] in
             
             self?.navigationController?.popViewController(animated: true)
         }
+    }
+    
+    private func showpopup(
+        title: String,
+        message:String,
+        completion: (() -> Void)? = nil
+    ) {
+        let popup = CustomPopupViewController(
+                title: title,
+                message: message,
+                buttonTitle: "OK"
+            ) {
+                completion?()
+            }
+            
+            present(
+                popup,
+                animated: true
+            )
         
-        present(popup, animated: true)
     }
 }

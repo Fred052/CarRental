@@ -43,8 +43,11 @@ class LoginViewController: UIViewController {
     private let passwordTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Password"
-        textField.backgroundColor = .white
         textField.borderStyle = .roundedRect
+        textField.isSecureTextEntry = true
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
+        textField.textContentType = .newPassword
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -59,11 +62,20 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    private let registerButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Don't have an account? Register", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         loginSetupView()
         setupActions()
+        setupPasswordField()
         
         
     }
@@ -77,6 +89,7 @@ class LoginViewController: UIViewController {
         view.addSubview(emailTextField)
         view.addSubview(passwordTextField)
         view.addSubview(loginButton)
+        view.addSubview(registerButton)
         
         
         
@@ -117,7 +130,11 @@ class LoginViewController: UIViewController {
             loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 20),
             loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            loginButton.heightAnchor.constraint(equalToConstant: 50)
+            loginButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            //registerButton
+            registerButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 20),
+            registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
             
         ])
         
@@ -125,6 +142,7 @@ class LoginViewController: UIViewController {
     
     private func setupActions() {
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
     }
     
     @objc private func loginButtonTapped() {
@@ -141,9 +159,9 @@ class LoginViewController: UIViewController {
             
             UserDefaults.standard.set(true, forKey: "isLoggedIn")
             
-            let homeViewController = HomeViewController()
+            let tabBarController = MainTabBarController()
             navigationController?.setViewControllers(
-                [homeViewController],
+                [tabBarController],
                 animated: true
             )
         } else {
@@ -156,5 +174,48 @@ class LoginViewController: UIViewController {
             present(popup, animated: true)
         }
         
+    }
+    
+    private func setupPasswordField() {
+        
+        let button = UIButton(type: .system)
+        
+        button.setImage(
+            UIImage(systemName: "eye.slash"),
+            for: .normal
+        )
+        
+        button.tintColor = .secondaryLabel
+        
+        button.addTarget(
+            self,
+            action: #selector(togglePasswordVisibility),
+            for: .touchUpInside
+        )
+        
+        passwordTextField.rightView = button
+        passwordTextField.rightViewMode = .always
+    }
+    
+    @objc private func togglePasswordVisibility() {
+        
+        passwordTextField.isSecureTextEntry.toggle()
+        
+        let imageName = passwordTextField.isSecureTextEntry
+            ? "eye.slash"
+            : "eye"
+        
+        if let button = passwordTextField.rightView as? UIButton {
+            button.setImage(
+                UIImage(systemName: imageName),
+                for: .normal
+            )
+        }
+    }
+    
+    @objc private func registerButtonTapped() {
+        
+        let registerVC = RegistrationViewController()
+        navigationController?.pushViewController(registerVC, animated: true)
     }
 }

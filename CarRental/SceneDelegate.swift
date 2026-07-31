@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let rootViewController: UIViewController
         
         if isLoggedIn {
-            rootViewController = HomeViewController()
+            rootViewController = MainTabBarController()
         } else {
             rootViewController = LoginViewController()
         }
