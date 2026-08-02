@@ -44,6 +44,8 @@ class LoginViewController: UIViewController {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.layer.cornerRadius = 25
         textField.clipsToBounds = true
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
         return textField
     }()
     
@@ -92,6 +94,16 @@ class LoginViewController: UIViewController {
         setupPasswordField()
         
         
+    }
+    
+    private func setupKeyboardDismiss() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func  dismissKeyboard() {
+        view.endEditing(true)
     }
     
     

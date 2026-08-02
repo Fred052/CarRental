@@ -22,6 +22,14 @@ class HomeViewController: UIViewController {
         return searchBar
     }()
     
+    private let availableVehicleLabel: UILabel = {
+       let label = UILabel()
+        label.text = "Available Vehicles"
+        label.font = .systemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -30,162 +38,89 @@ class HomeViewController: UIViewController {
         let offset = UIOffset(horizontal: 10.0, vertical: 0.0)
         searchBar.setPositionAdjustment(offset, for: .search)
         
-        setupSearchBar()
         setupCollectionView()
+        setupConstraints()
         
         loadCars()
-        
-        collectionView.setCollectionViewLayout(createLayout(), animated: false)
     }
     
-    private func createLayout() -> UICollectionViewCompositionalLayout {
-        return UICollectionViewCompositionalLayout { sectionIndex, _ in
-            
-            if sectionIndex == 0 {
-                return self.createCategorySection()
-            } else {
-                return self.createVehicleSection()
-            }
-            
-        }
-    }
+    private let categoryCollectionView: UICollectionView = {
+       let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 120, height: 160)
+        layout.minimumLineSpacing = 30
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
+    }()
     
-    private func createCategorySection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(120),
-            heightDimension: .absolute(160)
-        )
-        
-        let item = NSCollectionLayoutItem(
-            layoutSize: itemSize
-        )
-        
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: itemSize,
-            subitems: [item]
-        )
-        
-        let section = NSCollectionLayoutSection(group: group)
-        
-        section.orthogonalScrollingBehavior = .continuous
-        
-        section.interGroupSpacing = 35
-        
-        section.contentInsets = NSDirectionalEdgeInsets(
-            top: 10,
-            leading: 30,
-            bottom: 10,
-            trailing: 20
-        )
-        
-        return section
-    }
-
-    private func createVehicleSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(320)
-        )
-        
-        let item = NSCollectionLayoutItem(
-            layoutSize: itemSize
-        )
-        
-        let group = NSCollectionLayoutGroup.vertical(
-            layoutSize: itemSize,
-            subitems: [item]
-            )
-        
-        let section = NSCollectionLayoutSection(group: group)
-        
-        section.interGroupSpacing = 20
-        
-        section.contentInsets = NSDirectionalEdgeInsets(
-            top: 10,
-            leading: 30,
-            bottom: 10,
-            trailing: 30
-        )
-        
-        return section
-    }
-    
-    
-    
-    
-    private func setupSearchBar() {
-        
-        view.addSubview(searchBar)
-        
-        NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor,
-                constant: 12
-            ),
-            searchBar.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor,
-                constant: 16
-            ),
-            searchBar.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor,
-                constant: -16
-            ),
-            searchBar.heightAnchor.constraint(equalToConstant: 30)
-        ])
-    }
+    private let vehicleCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.itemSize = CGSize(width:UIScreen.main.bounds.width - 50, height: 320)
+        layout.minimumLineSpacing = 20
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        collectionView.showsVerticalScrollIndicator = false
+        return collectionView
+    }()
     
     private func setupCollectionView() {
         
-        view.addSubview(collectionView)
+        view.addSubview(searchBar)
+        view.addSubview(categoryCollectionView)
+        view.addSubview(availableVehicleLabel)
+        view.addSubview(vehicleCollectionView)
         
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        categoryCollectionView.delegate = self
+        categoryCollectionView.dataSource = self
         
-        collectionView.register(
+        vehicleCollectionView.delegate = self
+        vehicleCollectionView.dataSource = self
+        
+        categoryCollectionView.register(
             CarCategoryCollectionViewCell.self,
             forCellWithReuseIdentifier:
                 CarCategoryCollectionViewCell.identifier
         )
-        collectionView.register(
+        vehicleCollectionView.register(
             VehicleCollectionViewCell.self,
             forCellWithReuseIdentifier: VehicleCollectionViewCell.identifier
         )
-        
-        NSLayoutConstraint.activate([
-             collectionView.topAnchor.constraint(
-                equalTo: searchBar.bottomAnchor, constant: 16
-             ),
-             collectionView.leadingAnchor.constraint(
-                 equalTo: view.leadingAnchor
-             ),
-             collectionView.trailingAnchor.constraint(
-                 equalTo: view.trailingAnchor
-             ),
-             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-         ])
     }
     
-    
-    private let collectionView: UICollectionView = {
-        let collectionView = UICollectionView(
-            frame: .zero,
-            collectionViewLayout: UICollectionViewLayout()
-        )
-        
-        collectionView.backgroundColor = .clear
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return collectionView
-    }()
-    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 6),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            searchBar.heightAnchor.constraint(equalToConstant: 30),
+            
+            categoryCollectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 35),
+            categoryCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            categoryCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
+            categoryCollectionView.heightAnchor.constraint(equalToConstant: 160),
+            
+            availableVehicleLabel.topAnchor.constraint(equalTo: categoryCollectionView.bottomAnchor, constant: 30),
+            availableVehicleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            availableVehicleLabel.heightAnchor.constraint(equalToConstant: 30),
+            
+            vehicleCollectionView.topAnchor.constraint(equalTo: availableVehicleLabel.bottomAnchor, constant: 15),
+            vehicleCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            vehicleCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
+            vehicleCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
     private func loadCars() {
         cars = CarDataService.shared.loadCars()
         
         categories = Array(
             Set(cars.map {$0.category})
         ).sorted()
-        collectionView.reloadData()
+        categoryCollectionView.reloadData()
     }
     
     
@@ -194,21 +129,15 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        if section == 0 {
+        if collectionView == categoryCollectionView {
             return categories.count
-        } else {
-            return cars.count
         }
-    }
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return cars.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if indexPath.section == 0 {
+        if collectionView == categoryCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CarCategoryCollectionViewCell.identifier, for: indexPath) as! CarCategoryCollectionViewCell
             
             let category = categories[indexPath.item]
@@ -243,8 +172,9 @@ extension HomeViewController: UICollectionViewDataSource {
 
 extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selectedCategoryIndex = indexPath.item
-        
-        collectionView.reloadData()
+        if collectionView == categoryCollectionView {
+            selectedCategoryIndex = indexPath.item
+            categoryCollectionView.reloadData()
+        }
     }
 }

@@ -12,7 +12,7 @@ final class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Car Rental"
+        navigationItem.title = "Car Rental"
         
         setupTabs()
     }
@@ -46,7 +46,7 @@ final class MainTabBarController: UITabBarController {
         viewControllers = [
             homeVC,
             searchVC,
-            profileVC
+            profileNav
         ]
         
         selectedIndex = 0

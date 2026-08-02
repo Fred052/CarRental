@@ -14,7 +14,7 @@ final class CarCategoryCollectionViewCell: UICollectionViewCell {
     private let carImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
+        imageView.clipsToBounds = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -22,7 +22,7 @@ final class CarCategoryCollectionViewCell: UICollectionViewCell {
     private let categoryLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 14)
+        label.font = .systemFont(ofSize: 16, weight: .light)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -30,7 +30,7 @@ final class CarCategoryCollectionViewCell: UICollectionViewCell {
     private let countLabel: UILabel = {
        let label = UILabel()
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 12)
+        label.font = .boldSystemFont(ofSize: 15)
         label.textColor = .systemBlue
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -66,12 +66,12 @@ final class CarCategoryCollectionViewCell: UICollectionViewCell {
         
         
         NSLayoutConstraint.activate([
-            carImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+            carImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             carImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: -30),
             carImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
             carImageView.heightAnchor.constraint(equalToConstant: 100),
             
-            categoryLabel.topAnchor.constraint(equalTo: carImageView.bottomAnchor, constant: -5),
+            categoryLabel.topAnchor.constraint(equalTo: carImageView.bottomAnchor),
             categoryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
             categoryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
             

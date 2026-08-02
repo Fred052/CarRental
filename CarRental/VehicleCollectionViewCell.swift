@@ -108,13 +108,13 @@ final class  VehicleCollectionViewCell: UICollectionViewCell {
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            brandLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
+            brandLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 40),
             brandLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 30),
             
             modelLabel.topAnchor.constraint(equalTo: brandLabel.bottomAnchor, constant: 4),
             modelLabel.leadingAnchor.constraint(equalTo: brandLabel.leadingAnchor),
             
-            priceLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
+            priceLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 40),
             priceLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -30),
             
             periodLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 4),
@@ -126,7 +126,7 @@ final class  VehicleCollectionViewCell: UICollectionViewCell {
             engineLabel.topAnchor.constraint(equalTo: periodLabel.bottomAnchor, constant: 8),
             engineLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -30),
             
-            carImageView.topAnchor.constraint(equalTo: engineLabel.bottomAnchor, constant: 16),
+            carImageView.topAnchor.constraint(equalTo: engineLabel.bottomAnchor),
             carImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 30),
             carImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -30),
             carImageView.heightAnchor.constraint(equalToConstant: 200)
