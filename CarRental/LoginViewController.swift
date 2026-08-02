@@ -34,16 +34,30 @@ class LoginViewController: UIViewController {
     
     private let emailTextField: UITextField = {
         let textField = UITextField()
+        textField.borderStyle = .none
         textField.placeholder = "Email"
-        textField.borderStyle = .roundedRect
+        textField.backgroundColor = .white
+        
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 40))
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.layer.cornerRadius = 25
+        textField.clipsToBounds = true
         return textField
     }()
     
     private let passwordTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Password"
-        textField.borderStyle = .roundedRect
+        textField.borderStyle = .none
+        textField.backgroundColor = .white
+        
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 40))
+        textField.leftView = paddingView
+        textField.leftViewMode = .always
+        textField.layer.cornerRadius = 25
+        textField.clipsToBounds = true
         textField.isSecureTextEntry = true
         textField.autocapitalizationType = .none
         textField.autocorrectionType = .no
@@ -56,7 +70,7 @@ class LoginViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Login", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
-        button.layer.cornerRadius = 20
+        button.layer.cornerRadius = 25
         button.backgroundColor = .black
         button.translatesAutoresizingMaskIntoConstraints = false
         return button

@@ -28,7 +28,8 @@ final class  VehicleCollectionViewCell: UICollectionViewCell {
     
     private let brandLabel: UILabel = {
         let label = UILabel()
-        label.font = .boldSystemFont(ofSize: 20)
+        label.textColor = .black
+        label.font = .boldSystemFont(ofSize: 35)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -43,7 +44,8 @@ final class  VehicleCollectionViewCell: UICollectionViewCell {
     
     private let priceLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16)
+        label.font = .systemFont(ofSize: 35, weight: .thin)
+        label.textColor = .blue
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -59,15 +61,14 @@ final class  VehicleCollectionViewCell: UICollectionViewCell {
     private let engineTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Engine"
-        label.font = .systemFont(ofSize: 13)
-        label.textColor = .secondaryLabel
+        label.font = .systemFont(ofSize: 16, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let engineLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 15, weight: .medium)
+        label.font = .systemFont(ofSize: 15, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -108,24 +109,27 @@ final class  VehicleCollectionViewCell: UICollectionViewCell {
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             brandLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
-            brandLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+            brandLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 30),
             
             modelLabel.topAnchor.constraint(equalTo: brandLabel.bottomAnchor, constant: 4),
             modelLabel.leadingAnchor.constraint(equalTo: brandLabel.leadingAnchor),
             
             priceLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
-            priceLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+            priceLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -30),
             
-            engineTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            engineTitleLabel.bottomAnchor.constraint(equalTo: contentView.topAnchor, constant: -45),
+            periodLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 4),
+            periodLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -30),
             
-            engineLabel.leadingAnchor.constraint(equalTo: engineTitleLabel.leadingAnchor),
-            engineLabel.topAnchor.constraint(equalTo: engineTitleLabel.bottomAnchor, constant: 4),
+            engineTitleLabel.topAnchor.constraint(equalTo: modelLabel.bottomAnchor, constant: 8),
+            engineTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+        
+            engineLabel.topAnchor.constraint(equalTo: periodLabel.bottomAnchor, constant: 8),
+            engineLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -30),
             
-            carImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            carImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
-            carImageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10),
-            carImageView.heightAnchor.constraint(equalToConstant: 150)
+            carImageView.topAnchor.constraint(equalTo: engineLabel.bottomAnchor, constant: 16),
+            carImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 30),
+            carImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -30),
+            carImageView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
     

@@ -22,9 +22,6 @@ class HomeViewController: UIViewController {
         return searchBar
     }()
     
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -72,23 +69,22 @@ class HomeViewController: UIViewController {
         
         section.orthogonalScrollingBehavior = .continuous
         
-        section.interGroupSpacing = 15
+        section.interGroupSpacing = 35
         
         section.contentInsets = NSDirectionalEdgeInsets(
             top: 10,
-            leading: 20,
+            leading: 30,
             bottom: 10,
             trailing: 20
         )
         
         return section
     }
-    
-    
+
     private func createVehicleSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(380)
+            heightDimension: .absolute(320)
         )
         
         let item = NSCollectionLayoutItem(
@@ -106,9 +102,9 @@ class HomeViewController: UIViewController {
         
         section.contentInsets = NSDirectionalEdgeInsets(
             top: 10,
-            leading: 20,
+            leading: 30,
             bottom: 10,
-            trailing: 20
+            trailing: 30
         )
         
         return section
@@ -124,7 +120,7 @@ class HomeViewController: UIViewController {
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.topAnchor,
-                constant: 10
+                constant: 12
             ),
             searchBar.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor,
@@ -134,7 +130,7 @@ class HomeViewController: UIViewController {
                 equalTo: view.trailingAnchor,
                 constant: -16
             ),
-            searchBar.heightAnchor.constraint(equalToConstant: 90)
+            searchBar.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
     
@@ -157,7 +153,7 @@ class HomeViewController: UIViewController {
         
         NSLayoutConstraint.activate([
              collectionView.topAnchor.constraint(
-                equalTo: searchBar.bottomAnchor, constant: -10
+                equalTo: searchBar.bottomAnchor, constant: 16
              ),
              collectionView.leadingAnchor.constraint(
                  equalTo: view.leadingAnchor
@@ -189,9 +185,6 @@ class HomeViewController: UIViewController {
         categories = Array(
             Set(cars.map {$0.category})
         ).sorted()
-        
-        print("Cars:", cars.count)
-        print("categories:", categories)
         collectionView.reloadData()
     }
     
@@ -249,9 +242,7 @@ extension HomeViewController: UICollectionViewDataSource {
 }
 
 extension HomeViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath
-    ){
-        
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedCategoryIndex = indexPath.item
         
         collectionView.reloadData()

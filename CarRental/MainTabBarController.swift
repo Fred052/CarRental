@@ -20,21 +20,23 @@ final class MainTabBarController: UITabBarController {
     private func setupTabs() {
         
         let homeVC = HomeViewController()
-        let searchVC = SearchViewController()
-        let profileVC = ProfileViewController()
-        
+        let HomeNav = UINavigationController(rootViewController: homeVC)
         homeVC.tabBarItem = UITabBarItem(
             title: "Vehicles",
             image: UIImage(systemName: "car.circle"),
             selectedImage: UIImage(systemName: "car.circle.fill")
         )
         
+        let searchVC = SearchViewController()
+        let searchNav = UINavigationController(rootViewController: searchVC)
         searchVC.tabBarItem = UITabBarItem(
             title: "Search",
             image: UIImage(systemName: "magnifyingglass"),
             selectedImage: UIImage(systemName: "magnifyingglass.fill")
         )
         
+        let profileVC = ProfileViewController()
+        let profileNav = UINavigationController(rootViewController: profileVC)
         profileVC.tabBarItem = UITabBarItem(
             title: "Profile",
             image: UIImage(systemName: "person"),
