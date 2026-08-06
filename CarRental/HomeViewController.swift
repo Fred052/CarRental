@@ -44,6 +44,19 @@ class HomeViewController: UIViewController {
         loadCars()
     }
     
+    private let scrollView: UIScrollView = {
+       let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        return scrollView
+    }()
+    
+    private let contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let categoryCollectionView: UICollectionView = {
        let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -58,22 +71,24 @@ class HomeViewController: UIViewController {
     
     private let vehicleCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
         layout.itemSize = CGSize(width:UIScreen.main.bounds.width - 50, height: 320)
         layout.minimumLineSpacing = 20
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
-        collectionView.showsVerticalScrollIndicator = false
+        collectionView.isScrollEnabled = false
         return collectionView
     }()
     
     private func setupCollectionView() {
         
-        view.addSubview(searchBar)
-        view.addSubview(categoryCollectionView)
-        view.addSubview(availableVehicleLabel)
-        view.addSubview(vehicleCollectionView)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        contentView.addSubview(searchBar)
+        contentView.addSubview(categoryCollectionView)
+        contentView.addSubview(availableVehicleLabel)
+        contentView.addSubview(vehicleCollectionView)
         
         categoryCollectionView.delegate = self
         categoryCollectionView.dataSource = self
@@ -94,24 +109,39 @@ class HomeViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 6),
-            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            
+            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            
+            searchBar.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
+            searchBar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            searchBar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             searchBar.heightAnchor.constraint(equalToConstant: 30),
             
             categoryCollectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 35),
-            categoryCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            categoryCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
+            categoryCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 25),
+            categoryCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25),
             categoryCollectionView.heightAnchor.constraint(equalToConstant: 160),
             
             availableVehicleLabel.topAnchor.constraint(equalTo: categoryCollectionView.bottomAnchor, constant: 30),
-            availableVehicleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            availableVehicleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 25),
             availableVehicleLabel.heightAnchor.constraint(equalToConstant: 30),
             
             vehicleCollectionView.topAnchor.constraint(equalTo: availableVehicleLabel.bottomAnchor, constant: 15),
-            vehicleCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            vehicleCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
-            vehicleCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            vehicleCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 25),
+            vehicleCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25),
+            vehicleCollectionView.heightAnchor.constraint(equalToConstant: 800),
+            vehicleCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     private func loadCars() {
