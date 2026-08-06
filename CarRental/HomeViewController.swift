@@ -11,8 +11,9 @@ class HomeViewController: UIViewController {
     
     private var cars: [Car] = []
     private var categories: [String] = []
+    private var filteredCars: [Car] = []
     
-    private var selectedCategoryIndex: Int?
+    private var selectedCategoryIndex = 0
     
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
@@ -32,6 +33,8 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        CoreDataService.shared.importCarsFromJSON()
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.1)
         
@@ -140,7 +143,7 @@ class HomeViewController: UIViewController {
             vehicleCollectionView.topAnchor.constraint(equalTo: availableVehicleLabel.bottomAnchor, constant: 15),
             vehicleCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 25),
             vehicleCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25),
-            vehicleCollectionView.heightAnchor.constraint(equalToConstant: 800),
+            vehicleCollectionView.heightAnchor.constraint(equalToConstant: 1000),
             vehicleCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
@@ -150,6 +153,16 @@ class HomeViewController: UIViewController {
         categories = Array(
             Set(cars.map {$0.category})
         ).sorted()
+        
+        if !categories.isEmpty {
+            selectedCategoryIndex = 0
+            
+            let selectedCategory = categories[0]
+            
+            filteredCars = cars.filter {
+                $0.category == selectedCategory
+            }
+        }
         categoryCollectionView.reloadData()
     }
     
@@ -161,8 +174,9 @@ extension HomeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == categoryCollectionView {
             return categories.count
+        } else {
+            return  filteredCars.count
         }
-        return cars.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -189,9 +203,7 @@ extension HomeViewController: UICollectionViewDataSource {
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VehicleCollectionViewCell.identifier, for: indexPath) as! VehicleCollectionViewCell
             
-            let car = cars[indexPath.item]
-            
-            print("Vehicle cell:", car.brand, car.model)
+            let car = filteredCars[indexPath.item]
             
             cell.configure(with: car)
             
@@ -204,7 +216,13 @@ extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == categoryCollectionView {
             selectedCategoryIndex = indexPath.item
+            
+            let selectedCategory = categories[indexPath.item]
+            filteredCars = cars.filter {
+                $0.category == selectedCategory
+            }
             categoryCollectionView.reloadData()
+            vehicleCollectionView.reloadData()
         }
     }
 }

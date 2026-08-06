@@ -8,8 +8,6 @@
 import UIKit
 
 class RegistrationViewController: UIViewController {
-    
-    var users = [User]()
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -159,7 +157,7 @@ class RegistrationViewController: UIViewController {
             return
         }
         
-        guard !FileManagerService.shared.userExists(email: email) else {
+        if CoreDataService.shared.userExists(email: email) {
             
             showpopup(
                 title: "Account Already Exists",
@@ -167,14 +165,12 @@ class RegistrationViewController: UIViewController {
             )
             return
         }
-    
         
-        
-        
-        
-        let user = User(name: name, email: email, password: password)
-        
-        FileManagerService.shared.saveUser(user)
+        CoreDataService.shared.saveUser(
+            name: name,
+            email: email,
+            password: password
+            )
         
         showpopup(
             title: "Registration Successfull",

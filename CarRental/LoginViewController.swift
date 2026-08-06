@@ -179,15 +179,16 @@ class LoginViewController: UIViewController {
             return
         }
         
-        if let user = FileManagerService.shared.findUser(email: email, password: password) {
-            print("Login Successful")
-            print("Welcome \(user.name)")
+        let isValid = CoreDataService.shared.loginUser(email: email, password: password)
+        
+        if isValid {
             
             UserDefaults.standard.set(true, forKey: "isLoggedIn")
             
-            let tabBarController = MainTabBarController()
+         let mainTabbar = MainTabBarController()
+            
             navigationController?.setViewControllers(
-                [tabBarController],
+                [mainTabbar],
                 animated: true
             )
         } else {

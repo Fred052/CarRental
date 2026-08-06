@@ -38,6 +38,26 @@
       "period": "month",
       "engine": "4-Cyl 4.4 Liter",
       "image": "jeep_doodge"
+    },
+  {
+      "id": 5,
+      "brand": "Land Cruiser",
+      "model": "Prado",
+      "category": "SUV",
+      "price": 950,
+      "period": "month",
+      "engine": "4-Cyl 4.4 Liter",
+      "image": "prado"
+    },
+  {
+      "id": 6,
+      "brand": "Land Rover",
+      "model": "Discovery",
+      "category": "SUV",
+      "price": 1150,
+      "period": "month",
+      "engine": "4-Cyl 4.0 Liter",
+      "image": "discovery"
     }
 
 ]
