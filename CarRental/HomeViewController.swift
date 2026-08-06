@@ -12,6 +12,7 @@ class HomeViewController: UIViewController {
     private var cars: [Car] = []
     private var categories: [String] = []
     private var filteredCars: [Car] = []
+    private var vehicleCollectionViewHeightConstraint: NSLayoutConstraint!
     
     private var selectedCategoryIndex = 0
     
@@ -111,6 +112,9 @@ class HomeViewController: UIViewController {
     }
     
     private func setupConstraints() {
+        
+        vehicleCollectionViewHeightConstraint = vehicleCollectionView.heightAnchor.constraint(equalToConstant: 0)
+        
         NSLayoutConstraint.activate([
             
             
@@ -143,7 +147,7 @@ class HomeViewController: UIViewController {
             vehicleCollectionView.topAnchor.constraint(equalTo: availableVehicleLabel.bottomAnchor, constant: 15),
             vehicleCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 25),
             vehicleCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -25),
-            vehicleCollectionView.heightAnchor.constraint(equalToConstant: 1000),
+            vehicleCollectionViewHeightConstraint,
             vehicleCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
@@ -163,7 +167,24 @@ class HomeViewController: UIViewController {
                 $0.category == selectedCategory
             }
         }
+        
+        updateVehicleCollectionViewHeight()
+        
         categoryCollectionView.reloadData()
+        vehicleCollectionView.reloadData()
+    }
+    
+    private func updateVehicleCollectionViewHeight() {
+        let itemHeight: CGFloat = 320
+        let spacing: CGFloat = 20
+        
+        let count = filteredCars.count
+        
+        let totalSpacing = CGFloat(max(0, count - 1)) * spacing
+        
+        let totalHeight = CGFloat(count) * itemHeight + totalSpacing
+        
+        vehicleCollectionViewHeightConstraint.constant = totalHeight
     }
     
     
@@ -221,6 +242,9 @@ extension HomeViewController: UICollectionViewDelegate {
             filteredCars = cars.filter {
                 $0.category == selectedCategory
             }
+            
+            updateVehicleCollectionViewHeight()
+            
             categoryCollectionView.reloadData()
             vehicleCollectionView.reloadData()
         }
