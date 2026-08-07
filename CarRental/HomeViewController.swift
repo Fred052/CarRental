@@ -42,10 +42,20 @@ class HomeViewController: UIViewController {
         let offset = UIOffset(horizontal: 10.0, vertical: 0.0)
         searchBar.setPositionAdjustment(offset, for: .search)
         
+        searchBar.delegate = self
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        
+        view.addGestureRecognizer(tapGesture)
+        
         setupCollectionView()
         setupConstraints()
         
         loadCars()
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     private let scrollView: UIScrollView = {
@@ -59,6 +69,17 @@ class HomeViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+    
+    private let noResultLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No vehicle found"
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 20)
+        label.textColor = .secondaryLabel
+        label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private let categoryCollectionView: UICollectionView = {
@@ -89,6 +110,7 @@ class HomeViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
+        contentView.addSubview(noResultLabel)
         contentView.addSubview(searchBar)
         contentView.addSubview(categoryCollectionView)
         contentView.addSubview(availableVehicleLabel)
@@ -117,6 +139,8 @@ class HomeViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             
+            noResultLabel.centerXAnchor.constraint(equalTo: vehicleCollectionView.centerXAnchor),
+            noResultLabel.topAnchor.constraint(equalTo: vehicleCollectionView.topAnchor, constant: 50),
             
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -174,11 +198,41 @@ class HomeViewController: UIViewController {
         vehicleCollectionView.reloadData()
     }
     
+    private func filterCars() {
+        let searchText = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? ""
+        
+        if searchText.isEmpty {
+            let selectedCategory = categories[selectedCategoryIndex]
+            
+            filteredCars = cars.filter {
+                $0.category.lowercased() == selectedCategory.lowercased()
+            }
+        } else {
+            filteredCars = cars.filter { car in
+                
+                car.brand.lowercased().contains(searchText) ||
+                car.model.lowercased().contains(searchText) ||
+                car.category.lowercased().contains(searchText)
+            }
+        }
+        
+        updateVehicleCollectionViewHeight()
+        
+        noResultLabel.isHidden = !filteredCars.isEmpty
+        
+        vehicleCollectionView.reloadData()
+    }
+    
     private func updateVehicleCollectionViewHeight() {
         let itemHeight: CGFloat = 320
         let spacing: CGFloat = 20
         
         let count = filteredCars.count
+        
+        if count == 0 {
+            vehicleCollectionViewHeightConstraint.constant = 100
+            return
+        }
         
         let totalSpacing = CGFloat(max(0, count - 1)) * spacing
         
@@ -238,15 +292,20 @@ extension HomeViewController: UICollectionViewDelegate {
         if collectionView == categoryCollectionView {
             selectedCategoryIndex = indexPath.item
             
-            let selectedCategory = categories[indexPath.item]
-            filteredCars = cars.filter {
-                $0.category == selectedCategory
-            }
-            
-            updateVehicleCollectionViewHeight()
+           filterCars()
             
             categoryCollectionView.reloadData()
-            vehicleCollectionView.reloadData()
         }
+    }
+}
+
+extension HomeViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterCars()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }
